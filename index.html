@@ -14,7 +14,7 @@
 }
 
 /* ---- PAGE ---- */
-body{font-family:'Roboto',sans-serif;background:#1a1a2e;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+body{font-family:'Roboto',sans-serif;background:#1a1a2e;height:100vh;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding:0}
 
 /* ---- TABLET FRAME ---- */
 .tablet-frame{width:1180px;height:820px;transform-origin:center center;background:#0d0d1a;border-radius:24px;padding:14px;box-shadow:0 40px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.06),inset 0 0 0 1px rgba(255,255,255,0.04);position:relative;flex-shrink:0}
@@ -667,11 +667,11 @@ function toggleSuggs() {
 
 function scaleTablet() {
   var frame = document.querySelector('.tablet-frame');
-  var scaleX = (window.innerWidth - 40) / 1180;
-  var scaleY = (window.innerHeight - 40) / 820;
-  var scale = Math.min(scaleX, scaleY, 1);
+  var scaleX = (window.innerWidth - 32) / 1180;
+  var scaleY = (window.innerHeight - 32) / 820;
+  var scale = Math.min(scaleX, scaleY);
   frame.style.transform = 'scale(' + scale + ')';
-  document.body.style.height = Math.round(820 * scale + 40) + 'px';
+  frame.style.marginTop = Math.round((window.innerHeight - 820 * scale) / 2 - 14 * scale) + 'px';
 }
 window.addEventListener('resize', scaleTablet);
 scaleTablet();

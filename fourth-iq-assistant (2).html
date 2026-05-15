@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fourth iQ Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#002747;--deep:#0C4A7D;--teal:#00B69F;--orange:#FAA51A;--red:#D81632;--purple:#9678B6;
+  --bg:#F5F5F5;--tbg:rgba(0,182,159,0.08);--tbdr:rgba(0,182,159,0.3);
+  --rbg:rgba(216,22,50,0.08);--obg:rgba(250,165,26,0.1);--pbg:rgba(150,120,182,0.1);
+}
+
+/* ---- PAGE ---- */
+body{font-family:'Roboto',sans-serif;background:#1a1a2e;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 24px}
+
+/* ---- TABLET FRAME ---- */
+.tablet-frame{width:900px;height:580px;background:#0d0d1a;border-radius:24px;padding:14px;box-shadow:0 40px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.06),inset 0 0 0 1px rgba(255,255,255,0.04);position:relative;flex-shrink:0}
+.tablet-screen{width:100%;height:100%;border-radius:12px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:var(--bg)}
+
+/* ---- APP BEHIND (static Fourth Manager App) ---- */
+.app-topbar{background:var(--navy);height:52px;display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
+.app-logo{font-weight:700;font-size:16px;color:#fff;letter-spacing:-0.02em;display:flex;align-items:center;gap:8px}
+.app-logo-badge{background:var(--teal);font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;color:#fff;letter-spacing:0.06em}
+.app-loc{font-size:12px;color:rgba(255,255,255,0.5);margin-left:4px}
+.app-date{font-size:12px;color:rgba(255,255,255,0.4);margin-left:auto}
+.app-user{width:28px;height:28px;border-radius:50%;background:var(--deep);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+
+.app-body{flex:1;display:flex;overflow:hidden}
+
+.app-sidebar{width:56px;background:var(--navy);border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:8px;flex-shrink:0}
+.nav-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0.4;font-size:18px}
+.nav-icon.active{background:rgba(0,182,159,0.15);opacity:1}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:var(--teal);margin-top:2px}
+
+.app-content{flex:1;padding:16px;overflow:hidden;display:flex;flex-direction:column;gap:12px}
+
+.app-section-label{font-size:10px;font-weight:700;letter-spacing:0.1em;color:#8a96a3;text-transform:uppercase;margin-bottom:6px}
+
+.app-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.app-metric{background:#fff;border-radius:8px;border:1px solid rgba(0,0,0,0.07);padding:12px 14px}
+.app-metric-val{font-size:20px;font-weight:700;color:#1a2533;letter-spacing:-0.02em}
+.app-metric-lbl{font-size:11px;color:#8a96a3;margin-top:2px}
+.app-metric-sub{font-size:10px;margin-top:3px}
+
+.app-alerts{display:flex;flex-direction:column;gap:6px}
+.app-alert{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;font-size:12px}
+.app-alert.urgent{background:var(--rbg);border:1px solid rgba(216,22,50,0.2)}
+.app-alert.warn{background:var(--obg);border:1px solid rgba(250,165,26,0.2)}
+.app-alert.ok{background:var(--tbg);border:1px solid var(--tbdr)}
+.app-alert-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.app-alert-text{flex:1;font-weight:500;color:#1a2533}
+.app-alert-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:0.04em}
+.ab-red{background:var(--rbg);color:var(--red);border:1px solid rgba(216,22,50,0.25)}
+.ab-orange{background:var(--obg);color:#a06500;border:1px solid rgba(250,165,26,0.3)}
+.ab-teal{background:var(--tbg);color:#007a6a;border:1px solid var(--tbdr)}
+
+.app-bottom{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.app-card{background:#fff;border-radius:8px;border:1px solid rgba(0,0,0,0.07);padding:12px}
+.app-shifts{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.app-shift-row{display:flex;align-items:center;gap:8px;font-size:11px;padding:5px 8px;background:var(--bg);border-radius:5px}
+.app-shift-time{color:var(--deep);font-weight:500;min-width:90px}
+.app-shift-name{flex:1;font-weight:500}
+.app-mini-badge{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px}
+
+/* ---- BLUR OVERLAY (so app looks in background) ---- */
+.blur-overlay{position:absolute;inset:0;background:rgba(10,20,40,0.15);backdrop-filter:blur(0px);z-index:10;border-radius:12px}
+
+/* ---- iQ CHAT PANEL (overlaid) ---- */
+.iq-panel{position:absolute;right:20px;bottom:20px;width:360px;height:480px;background:#fff;z-index:20;display:flex;flex-direction:column;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.08)}
+
+.iq-header{background:var(--navy);padding:12px 14px;flex-shrink:0;border-radius:14px 14px 0 0}
+.iq-header-top{display:flex;align-items:center;gap:8px}
+.iq-logo{font-size:13px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;letter-spacing:-0.01em}
+.iq-badge{background:var(--teal);font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;letter-spacing:0.06em}
+.iq-pulse{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite;margin-left:auto}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.iq-sub{font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px}
+.iq-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+
+/* user bubble */
+.mu{align-self:flex-end;background:var(--navy);color:#fff;border-radius:10px 10px 2px 10px;padding:9px 12px;font-size:12px;line-height:1.5;max-width:85%}
+
+/* ai response */
+.ma{align-self:flex-start;width:100%}
+.ma-summary{font-size:12px;line-height:1.55;color:#1a2533;margin-bottom:7px;padding:0 1px}
+.ma-summary b{color:var(--deep)}
+
+/* response card */
+.iq-card{background:var(--bg);border:1px solid rgba(0,0,0,0.08);border-radius:8px;overflow:hidden}
+.iq-card-header{padding:8px 12px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:space-between}
+.iq-card-title{font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a96a3}
+.iq-src-tag{font-size:9px;color:#b0b8c4}
+.iq-metrics{display:flex;border-bottom:1px solid rgba(0,0,0,0.05)}
+.iq-metric{flex:1;padding:10px 12px;text-align:center;border-right:1px solid rgba(0,0,0,0.05)}
+.iq-metric:last-child{border-right:none}
+.iq-metric-val{font-size:17px;font-weight:700;color:#1a2533;letter-spacing:-0.02em;line-height:1}
+.iq-metric-val.red{color:var(--red)}
+.iq-metric-val.orange{color:var(--orange)}
+.iq-metric-val.teal{color:var(--teal)}
+.iq-metric-lbl{font-size:10px;color:#8a96a3;margin-top:2px}
+.iq-row{display:flex;align-items:center;padding:7px 12px;border-bottom:1px solid rgba(0,0,0,0.05);gap:8px;font-size:11.5px}
+.iq-row:last-child{border-bottom:none}
+.row-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot-red{background:var(--red)}.dot-orange{background:var(--orange)}.dot-teal{background:var(--teal)}.dot-sky{background:#6FB4E3}.dot-purple{background:var(--purple)}
+.row-main{flex:1;font-weight:500;color:#1a2533}
+.row-sub{font-size:10px;color:#8a96a3;margin-top:1px}
+.row-right{font-size:11px;color:#8a96a3;flex-shrink:0}
+.row-right b{color:#1a2533}
+.row-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:0.04em;flex-shrink:0}
+.badge-red{background:var(--rbg);color:var(--red);border:1px solid rgba(216,22,50,0.2)}
+.badge-orange{background:var(--obg);color:#a06500;border:1px solid rgba(250,165,26,0.25)}
+.badge-teal{background:var(--tbg);color:#007a6a;border:1px solid var(--tbdr)}
+.badge-purple{background:var(--pbg);color:var(--purple);border:1px solid rgba(150,120,182,0.25)}
+
+/* tool call */
+.mtool{align-self:flex-start;display:flex;align-items:center;gap:6px;padding:5px 9px;background:var(--tbg);border:1px solid var(--tbdr);border-radius:5px;font-size:10px;color:#007a6a;font-weight:500}
+.spinner{width:9px;height:9px;border:1.5px solid #007a6a;border-top-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+.tick{width:9px;height:9px;background:var(--teal);border-radius:50%;color:#fff;font-size:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* typing */
+.typing{align-self:flex-start;padding:9px 12px;background:var(--bg);border:1px solid rgba(0,0,0,0.08);border-radius:8px}
+.dots{display:flex;gap:3px;align-items:center}
+.dots span{width:4px;height:4px;background:#ccc;border-radius:50%;animation:blink 1.2s infinite}
+.dots span:nth-child(2){animation-delay:0.2s}
+.dots span:nth-child(3){animation-delay:0.4s}
+@keyframes blink{0%,80%,100%{transform:scale(0.8);opacity:0.4}40%{transform:scale(1.1);opacity:1}}
+
+/* suggestions */
+.iq-suggs-wrap{border-top:1px solid rgba(0,0,0,0.06);flex-shrink:0}
+.iq-suggs-toggle{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;cursor:pointer;user-select:none}
+.iq-suggs-label{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#8a96a3}
+.iq-suggs-arrow{font-size:10px;color:#b0b8c4;transition:transform 0.2s}
+.iq-suggs-arrow.open{transform:rotate(180deg)}
+.iq-suggs{padding:0 12px;display:flex;flex-wrap:wrap;gap:5px;overflow:hidden;max-height:0;transition:max-height 0.3s ease,padding 0.3s ease;visibility:hidden}
+.iq-suggs.open{max-height:200px;padding:4px 12px 8px;visibility:visible}
+.chip{font-size:10px;padding:4px 9px;background:#fff;border:1px solid rgba(0,0,0,0.1);border-radius:12px;cursor:pointer;color:#445;transition:100ms;white-space:nowrap}
+.chip:hover{border-color:var(--teal);color:var(--teal);background:var(--tbg)}
+
+/* input */
+.iq-input-area{padding:8px 12px 12px;flex-shrink:0;border-top:1px solid rgba(0,0,0,0.07)}
+.iq-input-row{display:flex;gap:6px;background:var(--bg);border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:5px 5px 5px 11px;transition:100ms}
+.iq-input-row:focus-within{border-color:var(--teal);box-shadow:0 0 0 2px var(--tbg)}
+.iq-inp{flex:1;border:none;outline:none;font-size:12px;font-family:'Roboto',sans-serif;color:#1a2533;background:transparent;resize:none;line-height:1.4;max-height:80px}
+.iq-askbtn{background:var(--navy);color:#fff;border:none;border-radius:6px;padding:6px 13px;cursor:pointer;font-size:11px;font-weight:700;align-self:flex-end;transition:100ms;flex-shrink:0}
+.iq-askbtn:hover:not(:disabled){background:var(--deep)}
+.iq-askbtn:disabled{opacity:0.35;cursor:not-allowed}
+
+/* tablet home bar */
+.tablet-bar{height:4px;width:120px;background:rgba(255,255,255,0.2);border-radius:2px;margin:6px auto 0}
+</style>
+</head>
+<body>
+
+<div class="tablet-frame">
+  <div class="tablet-screen">
+
+    <!-- BACKGROUND APP -->
+    <div class="app-topbar">
+      <div class="app-logo"><span>fourth</span><span class="app-logo-badge">Manager</span></div>
+      <span class="app-loc">The Crown Hotel, Birmingham</span>
+      <span class="app-date">Friday 16 May 2025</span>
+      <div class="app-user">RD</div>
+    </div>
+    <div class="app-body">
+      <div class="app-sidebar">
+        <div class="nav-icon active">&#9783;</div>
+        <div class="nav-icon">&#128197;</div>
+        <div class="nav-icon">&#128101;</div>
+        <div class="nav-icon">&#128202;</div>
+        <div class="nav-icon">&#9881;</div>
+      </div>
+      <div class="app-content">
+        <div>
+          <div class="app-section-label">Business snapshot - today</div>
+          <div class="app-metrics">
+            <div class="app-metric"><div class="app-metric-val">£18,420</div><div class="app-metric-lbl">Sales today</div><div class="app-metric-sub" style="color:var(--teal)">+4% vs last Friday</div></div>
+            <div class="app-metric"><div class="app-metric-val" style="color:var(--orange)">28.4%</div><div class="app-metric-lbl">Labour %</div><div class="app-metric-sub" style="color:var(--red)">Target 27%</div></div>
+            <div class="app-metric"><div class="app-metric-val">42/44</div><div class="app-metric-lbl">Shifts covered</div><div class="app-metric-sub" style="color:var(--red)">2 open shifts</div></div>
+            <div class="app-metric"><div class="app-metric-val" style="color:var(--orange)">3</div><div class="app-metric-lbl">Holiday requests</div><div class="app-metric-sub" style="color:#8a96a3">Pending approval</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="app-section-label">iQ alerts</div>
+          <div class="app-alerts">
+            <div class="app-alert urgent"><span class="app-alert-dot" style="background:var(--red)"></span><span class="app-alert-text">Jamie Reed sick -- Kitchen Porter 11:00-19:00 uncovered</span><span class="app-alert-badge ab-red">NOW</span></div>
+            <div class="app-alert warn"><span class="app-alert-dot" style="background:var(--orange)"></span><span class="app-alert-text">Saturday labour forecast 12% over budget</span><span class="app-alert-badge ab-orange">ACTION</span></div>
+            <div class="app-alert warn"><span class="app-alert-dot" style="background:var(--orange)"></span><span class="app-alert-text">3 holiday requests pending -- peak Saturday 24 May</span><span class="app-alert-badge ab-orange">REVIEW</span></div>
+            <div class="app-alert ok"><span class="app-alert-dot" style="background:var(--teal)"></span><span class="app-alert-text">Schedule published -- w/c 19 May. All 44 shifts assigned.</span><span class="app-alert-badge ab-teal">OK</span></div>
+          </div>
+        </div>
+        <div class="app-bottom">
+          <div class="app-card">
+            <div class="app-section-label">Today's shifts</div>
+            <div class="app-shifts">
+              <div class="app-shift-row"><span class="app-shift-time">07:00-15:30</span><span class="app-shift-name">Sarah Walsh</span><span class="app-mini-badge" style="background:var(--tbg);color:#007a6a">Confirmed</span></div>
+              <div class="app-shift-row"><span class="app-shift-time">08:00-16:00</span><span class="app-shift-name">Marcus Hill</span><span class="app-mini-badge" style="background:var(--tbg);color:#007a6a">Confirmed</span></div>
+              <div class="app-shift-row"><span class="app-shift-time">09:00-17:00</span><span class="app-shift-name">Priya Patel</span><span class="app-mini-badge" style="background:var(--pbg);color:var(--purple)">On Leave</span></div>
+              <div class="app-shift-row"><span class="app-shift-time">11:00-19:00</span><span class="app-shift-name">OPEN SHIFT</span><span class="app-mini-badge" style="background:var(--rbg);color:var(--red)">Uncovered</span></div>
+              <div class="app-shift-row"><span class="app-shift-time">14:00-22:00</span><span class="app-shift-name">Tom Okafor</span><span class="app-mini-badge" style="background:var(--tbg);color:#007a6a">Confirmed</span></div>
+            </div>
+          </div>
+          <div class="app-card">
+            <div class="app-section-label">Labour % this week</div>
+            <div style="display:flex;flex-direction:column;gap:5px;margin-top:6px">
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Mon</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:74%;height:100%;background:var(--teal);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--teal);font-weight:500">26%</span></div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Tue</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:72%;height:100%;background:var(--teal);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--teal);font-weight:500">25%</span></div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Wed</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:78%;height:100%;background:var(--teal);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--teal);font-weight:500">27%</span></div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Thu</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:80%;height:100%;background:var(--orange);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--orange);font-weight:500">28%</span></div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Fri</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:81%;height:100%;background:var(--orange);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--orange);font-weight:500">28%</span></div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Sat</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:89%;height:100%;background:var(--red);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--red);font-weight:500">31%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLUR LAYER -->
+    <div class="blur-overlay"></div>
+
+    <!-- iQ CHAT PANEL -->
+    <div class="iq-panel">
+      <div class="iq-header">
+        <div class="iq-header-top">
+          <div class="iq-logo"><span>fourth</span><span class="iq-badge">iQ</span></div>
+          <span class="iq-pulse"></span>
+        </div>
+        <div class="iq-sub">13 API tools connected . The Crown Hotel</div>
+      </div>
+      <div class="iq-msgs" id="msgs"></div>
+      <div class="iq-suggs-wrap"><div class="iq-suggs-toggle" onclick="toggleSuggs()"><span class="iq-suggs-label">Suggested questions</span><span class="iq-suggs-arrow" id="suggs-arrow">&#9660;</span></div><div class="iq-suggs" id="suggs"></div></div>
+      <div class="iq-input-area">
+        <div class="iq-input-row">
+          <textarea class="iq-inp" id="inp" rows="1" placeholder="Ask iQ anything..." onkeydown="handleKey(event)"></textarea>
+          <button class="iq-askbtn" id="askbtn" onclick="send()">Ask</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="tablet-bar"></div>
+</div>
+
+<script>
+var thinking = false;
+
+function card(title, src, metricsHtml, rowsHtml) {
+  var h = '<div class="iq-card">';
+  h += '<div class="iq-card-header"><span class="iq-card-title">' + title + '</span><span class="iq-src-tag">' + src + '</span></div>';
+  if (metricsHtml) h += '<div class="iq-metrics">' + metricsHtml + '</div>';
+  if (rowsHtml) h += rowsHtml;
+  h += '</div>';
+  return h;
+}
+function metric(val, lbl, cls) {
+  return '<div class="iq-metric"><div class="iq-metric-val ' + (cls||'') + '">' + val + '</div><div class="iq-metric-lbl">' + lbl + '</div></div>';
+}
+function row(dotCls, main, sub, right, badgeHtml) {
+  var h = '<div class="iq-row">';
+  h += '<span class="row-dot ' + dotCls + '"></span>';
+  h += '<div style="flex:1"><div class="row-main">' + main + '</div>';
+  if (sub) h += '<div class="row-sub">' + sub + '</div>';
+  h += '</div>';
+  if (right) h += '<div class="row-right">' + right + '</div>';
+  if (badgeHtml) h += badgeHtml;
+  h += '</div>';
+  return h;
+}
+function badge(lbl, cls) { return '<span class="row-badge ' + cls + '">' + lbl + '</span>'; }
+
+var RESPONSES = [
+  {
+    keys: ['alert','urgent','today','action','summary','what do i have','what have i'],
+    tools: ['get_alerts -> IQ WFM API', 'get_business_snapshot -> BI WebApi'],
+    summary: '<b>2 urgent actions</b> today. Sales tracking at <b>£18,420</b> -- up 4% on last Friday.',
+    cardTitle: 'ACTIVE ALERTS', cardSrc: 'IQ WFM API',
+    metrics: metric('2','Urgent','red') + metric('3','Warnings','orange') + metric('£18,420','Sales today','teal'),
+    rows:
+      row('dot-red','Jamie Reed sick -- Kitchen Porter 11:00-19:00','3 eligible staff available for cover','',badge('NOW','badge-red')) +
+      row('dot-orange','Saturday labour forecast 12% over budget','AI recommends reducing contractor hours by 8','',badge('ACTION','badge-orange')) +
+      row('dot-orange','3 holiday requests pending -- peak Saturday 24 May','Priya Patel, Tom Okafor, Caleb Singh','',badge('REVIEW','badge-orange')) +
+      row('dot-teal','Schedule published -- w/c 19 May','All 44 shifts assigned. Sign-off complete.','',badge('OK','badge-teal')) +
+      row('dot-sky','RTW expiry -- Lucia Ferreira in 14 days','Passport expires 29 May','',badge('INFO','badge-teal'))
+  },
+  {
+    keys: ['cover','jamie','sick','kitchen porter','who can'],
+    tools: ['get_absence_cover -> IQ WFM API', 'get_shift_coverage -> Scheduling API'],
+    summary: '<b>Dan Xu</b> is the recommended cover -- available now, trained, no overtime cost.',
+    cardTitle: 'ABSENCE COVER', cardSrc: 'IQ WFM API',
+    metrics: metric('3','Available','') + metric('1','Recommended','teal') + metric('£0','Overtime cost','teal'),
+    rows:
+      row('dot-teal','Dan Xu','Available now . trained . no overtime','',badge('RECOMMENDED','badge-teal')) +
+      row('dot-orange','Aisha Obi','Available after 10:30 . trained . no overtime','',badge('AVAILABLE','badge-orange')) +
+      row('dot-red','Connor Hall','Rest day . trained . overtime required (+£142)','',badge('OVERTIME','badge-red'))
+  },
+  {
+    keys: ['saturday','forecast','weekend','risk'],
+    tools: ['get_labour_forecast -> IQ WFM API', 'get_holiday_requests -> PeopleSystem Integration API'],
+    summary: 'Saturday base forecast is on target at <b>27.2%</b>, but pending holidays could push it to <b>31.2%</b>.',
+    cardTitle: 'SATURDAY LABOUR FORECAST', cardSrc: 'IQ WFM API',
+    metrics: metric('£5,820','Forecast cost','') + metric('27.2%','Base %','teal') + metric('31.2%','Risk %','red'),
+    rows:
+      row('dot-teal','Base forecast','£21,400 projected sales . on target','£5,820 / 27.2%','') +
+      row('dot-red','Risk scenario','If all 3 holiday requests approved','£6,660 / 31.2%','') +
+      row('dot-red','Priya Patel','Receptionist . no cover scheduled','Sat 24 May',badge('HOLD','badge-orange')) +
+      row('dot-teal','Tom Okafor','Bartender . Jamie Carr available to cover','Sat 24 May',badge('APPROVE','badge-teal')) +
+      row('dot-teal','Caleb Singh','Waiter . sufficient restaurant cover','Sat 24 May',badge('APPROVE','badge-teal'))
+  },
+  {
+    keys: ['holiday','approve','request','leave','pending'],
+    tools: ['get_holiday_requests -> PeopleSystem Integration API'],
+    summary: '<b>3 pending requests</b> for Saturday 24 May. Approve Tom and Caleb -- hold Priya until cover is arranged.',
+    cardTitle: 'PENDING HOLIDAY REQUESTS', cardSrc: 'PeopleSystem API',
+    metrics: metric('3','Pending','orange') + metric('2','Can approve','teal') + metric('1','Needs cover','red'),
+    rows:
+      row('dot-red','Priya Patel','Receptionist . no cover scheduled . balance 12.5d','Sat 24 May',badge('HOLD','badge-red')) +
+      row('dot-teal','Tom Okafor','Bartender . Jamie Carr available . balance 8d','Sat 24 May',badge('APPROVE','badge-teal')) +
+      row('dot-teal','Caleb Singh','Waiter . sufficient cover . balance 15.5d','Sat 24 May',badge('APPROVE','badge-teal'))
+  },
+  {
+    keys: ['labour','cost','overage','driving','why is','this week','over budget'],
+    tools: ['get_labour_forecast -> IQ WFM API'],
+    summary: 'Labour is <b>£760 over budget</b> this week -- driven by Thursday and Friday overtime.',
+    cardTitle: 'LABOUR COST THIS WEEK', cardSrc: 'IQ WFM API',
+    metrics: metric('£20,760','Actual','red') + metric('£20,000','Budget','') + metric('+£760','Variance','red'),
+    rows:
+      row('dot-teal','Mon','Sales £14,200','26.0%','') +
+      row('dot-teal','Tue','Sales £12,800','25.1%','') +
+      row('dot-teal','Wed','Sales £15,600','27.2%','') +
+      row('dot-orange','Thu','Kitchen overtime +£380','28.1%','') +
+      row('dot-orange','Fri','Bar staff overtime +£380','28.4%','') +
+      row('dot-red','Sat','Forecast . holiday requests pending','31.2%*','')
+  },
+  {
+    keys: ['rtw','right to work','expir','document','passport','visa'],
+    tools: ['get_rtw_expiries -> PeopleSystem Integration API'],
+    summary: '<b>3 employees</b> have RTW documents expiring soon. Lucia Ferreira requires immediate action.',
+    cardTitle: 'RIGHT TO WORK EXPIRIES', cardSrc: 'PeopleSystem API',
+    metrics: metric('1','Urgent','red') + metric('1','Warning','orange') + metric('1','Attention',''),
+    rows:
+      row('dot-red','Lucia Ferreira','Waitress . Passport','Expires 29 May',badge('14 DAYS','badge-red')) +
+      row('dot-orange','Yusuf Al-Nasser','Kitchen Porter . BRP Card','Expires 12 Jun',badge('28 DAYS','badge-orange')) +
+      row('dot-sky','Mei Zhang','Housekeeper . Passport','Expires 24 Jun',badge('40 DAYS','badge-teal'))
+  },
+  {
+    keys: ['sales','performance','revenue','covers','spend','takings'],
+    tools: ['get_sales_performance -> IQ WFM API'],
+    summary: 'Sales today are <b>£18,420</b> -- beating AI forecast by 4.1% and budget by 5.3%.',
+    cardTitle: 'SALES PERFORMANCE TODAY', cardSrc: 'IQ WFM API',
+    metrics: metric('£18,420','Actual','teal') + metric('+4.1%','vs AI forecast','teal') + metric('142','Covers',''),
+    rows:
+      row('dot-teal','vs AI Forecast','£17,700 forecast','<b>+£720</b>','') +
+      row('dot-teal','vs Budget','£17,500 budget','<b>+£920</b>','') +
+      row('dot-sky','Avg spend per cover','','<b>£129.72</b>','') +
+      row('dot-orange','Labour %','Target 27%','<b>28.4%</b>','') +
+      row('dot-teal','Peak hours','Best trading periods','12:00-14:00 . 19:00-21:00','')
+  },
+  {
+    keys: ['shift','rota','schedule','who is in','staff today','working today'],
+    tools: ['get_shift_coverage -> Scheduling API'],
+    summary: '<b>42 of 44 shifts covered</b> today. Kitchen Porter 11:00-19:00 is open (Jamie Reed sick).',
+    cardTitle: "TODAY'S SHIFTS", cardSrc: 'Scheduling API',
+    metrics: metric('44','Total','') + metric('42','Covered','teal') + metric('1','Open','red'),
+    rows:
+      row('dot-teal','Sarah Walsh','Front of House . 07:00-15:30','',badge('CONFIRMED','badge-teal')) +
+      row('dot-teal','Marcus Hill','Chef de Partie . 08:00-16:00','',badge('CONFIRMED','badge-teal')) +
+      row('dot-purple','Priya Patel','Receptionist . 09:00-17:00','',badge('ON LEAVE','badge-purple')) +
+      row('dot-red','OPEN SHIFT','Kitchen Porter . 11:00-19:00','',badge('UNCOVERED','badge-red')) +
+      row('dot-teal','Tom Okafor','Bartender . 14:00-22:00','',badge('CONFIRMED','badge-teal')) +
+      row('dot-teal','Caleb Singh','Waiter . 18:00-23:00','',badge('CONFIRMED','badge-teal'))
+  },
+  {
+    keys: ['my holiday','how many days','days left','balance','my leave','days do i'],
+    tools: ['get_holiday_balance -> ESS API'],
+    summary: 'You have <b>12.5 days</b> remaining this holiday year.',
+    cardTitle: 'YOUR HOLIDAY BALANCE', cardSrc: 'ESS API',
+    metrics: metric('25','Entitlement','') + metric('12.5','Remaining','teal') + metric('2','Booked','orange'),
+    rows:
+      row('dot-orange','Used','Taken so far','10.5 days','') +
+      row('dot-purple','Booked','22-23 May . approved by Rachel Davies','2 days','') +
+      row('dot-teal','Remaining','Available to book','<b>12.5 days</b>','') +
+      row('dot-sky','Holiday year ends','','31 Dec 2025','')
+  },
+  {
+    keys: ['my payslip','next payslip','next pay','when do i get paid','how much will i','salary'],
+    tools: ['get_payslip_summary -> ESS API'],
+    summary: 'Your next payslip is due <b>31 May 2025</b> with an estimated net pay of <b>£1,861</b>.',
+    cardTitle: 'NEXT PAYSLIP', cardSrc: 'ESS API',
+    metrics: metric('£2,450','Gross','') + metric('£1,861','Net','teal') + metric('31 May','Pay date',''),
+    rows:
+      row('dot-teal','Gross pay','25 Apr - 24 May 2025','<b>£2,450.00</b>','') +
+      row('dot-orange','Income tax','Tax code 1257L','-£245.80','') +
+      row('dot-orange','National Insurance','Category A','-£220.50','') +
+      row('dot-orange','Pension (5%)','Employee contribution','-£122.50','') +
+      row('dot-teal','Estimated net','','<b>£1,861.20</b>','')
+  },
+  {
+    keys: ['my shifts','my rota','my schedule','when am i','am i working','next week'],
+    tools: ['get_my_rota -> ESS API'],
+    summary: 'You are working <b>3 days next week</b> (Mon-Wed) with Thu and Fri as approved holiday.',
+    cardTitle: 'YOUR ROTA -- W/C 19 MAY', cardSrc: 'ESS API',
+    metrics: metric('3','Shifts','teal') + metric('2','Holiday','purple') + metric('24h','Scheduled',''),
+    rows:
+      row('dot-teal','Monday 19 May','Reception . 09:00-17:00','8h',badge('CONFIRMED','badge-teal')) +
+      row('dot-teal','Tuesday 20 May','Reception . 09:00-17:00','8h',badge('CONFIRMED','badge-teal')) +
+      row('dot-teal','Wednesday 21 May','Reception . 09:00-17:00','8h',badge('CONFIRMED','badge-teal')) +
+      row('dot-purple','Thursday 22 May','Holiday -- approved','',badge('HOLIDAY','badge-purple')) +
+      row('dot-purple','Friday 23 May','Holiday -- approved','',badge('HOLIDAY','badge-purple'))
+  },
+  {
+    keys: ['book','can i request','request time off','30 may','time off','can i have'],
+    tools: ['get_holiday_balance -> ESS API', 'get_shift_coverage -> Scheduling API'],
+    summary: 'Friday 30 May looks clear. Request submitted to <b>Rachel Davies</b> for approval.',
+    cardTitle: 'HOLIDAY REQUEST -- FRI 30 MAY', cardSrc: 'ESS API',
+    metrics: metric('12.5d','Balance','teal') + metric('2','Cover available','teal') + metric('Pending','Approval','orange'),
+    rows:
+      row('dot-teal','Balance check','12.5 days remaining . 1 day would leave 11.5d','OK','') +
+      row('dot-teal','Cover check','2 Receptionists scheduled Fri 30 May','OK','') +
+      row('dot-orange','Submitted to','Rachel Davies for approval','',badge('PENDING','badge-orange'))
+  },
+  {
+    keys: ['p60','tax year','hmrc','tax document'],
+    tools: ['get_p60 -> ESS API'],
+    summary: 'Your <b>P60 for 2024/25</b> is available. Total pay £28,420 with £3,284 tax paid.',
+    cardTitle: 'P60 -- TAX YEAR 2024/25', cardSrc: 'ESS API',
+    metrics: metric('£28,420','Total pay','') + metric('£3,284','Tax paid','') + metric('£2,410','NI paid',''),
+    rows:
+      row('dot-teal','Total pay','Year ending 5 April 2025','<b>£28,420.00</b>','') +
+      row('dot-orange','Income tax paid','Tax code 1257L','<b>£3,284.00</b>','') +
+      row('dot-orange','NI contributions paid','Category A','<b>£2,410.00</b>','') +
+      row('dot-sky','Document status','Issued 6 May 2025','',badge('AVAILABLE','badge-teal'))
+  },
+  {
+    keys: ['my right to work','my passport','my rtw','my document'],
+    tools: ['get_employee_profile -> ESS API'],
+    summary: 'Your British Passport expires in <b>14 days (29 May)</b>. Contact HR immediately.',
+    cardTitle: 'YOUR RIGHT TO WORK', cardSrc: 'ESS API',
+    metrics: metric('14','Days remaining','red') + metric('29 May','Expiry','red') + metric('Urgent','Action needed','red'),
+    rows:
+      row('dot-red','British Passport','Document on file','Expires 29 May','') +
+      row('dot-orange','Action required','Provide updated document to HR before expiry','',badge('URGENT','badge-red')) +
+      row('dot-sky','Alternative','Home Office share code accepted while renewing','','') +
+      row('dot-teal','Contact','Rachel Davies or HR directly','','')
+  },
+  {
+    keys: ['payroll','pay cost','wage','labour this','total labour'],
+    tools: ['get_labour_forecast -> IQ WFM API'],
+    summary: 'Weekly payroll is <b>£20,760</b> -- £760 over budget, driven by Thu/Fri overtime.',
+    cardTitle: 'PAYROLL SUMMARY THIS WEEK', cardSrc: 'IQ WFM API',
+    metrics: metric('£20,760','Total cost','red') + metric('28.4%','Labour %','orange') + metric('+£760','Over budget','red'),
+    rows:
+      row('dot-orange','Thursday kitchen overtime','Unplanned','<b>+£380</b>','') +
+      row('dot-orange','Friday bar staff overtime','Unplanned','<b>+£380</b>','') +
+      row('dot-sky','Saturday forecast','Pending holiday approvals','<b>£5,820</b>','')
+  }
+];
+
+function getResponse(msg) {
+  var text = msg.toLowerCase();
+  for (var i = 0; i < RESPONSES.length; i++) {
+    var r = RESPONSES[i];
+    for (var j = 0; j < r.keys.length; j++) {
+      if (text.indexOf(r.keys[j]) > -1) return r;
+    }
+  }
+  return {
+    tools: ['get_alerts -> IQ WFM API'],
+    summary: 'I can help with shifts, labour, alerts, holidays, sales, payslips, rotas, P60, and right to work. Try one of the suggestions below.',
+    cardTitle: null, cardSrc: null, metrics: null, rows: null
+  };
+}
+
+function addUserMsg(text) {
+  var c = document.getElementById('msgs');
+  var m = document.createElement('div');
+  m.className = 'mu'; m.textContent = text;
+  c.appendChild(m); c.scrollTop = c.scrollHeight;
+}
+
+function addAIMsg(resp) {
+  var c = document.getElementById('msgs');
+  var wrap = document.createElement('div');
+  wrap.className = 'ma';
+  var sum = document.createElement('div');
+  sum.className = 'ma-summary'; sum.innerHTML = resp.summary;
+  wrap.appendChild(sum);
+  if (resp.cardTitle) {
+    var el = document.createElement('div');
+    el.innerHTML = card(resp.cardTitle, resp.cardSrc, resp.metrics, resp.rows);
+    wrap.appendChild(el.firstChild);
+  }
+  c.appendChild(wrap); c.scrollTop = c.scrollHeight;
+}
+
+function showTyping() {
+  var c = document.getElementById('msgs');
+  var t = document.createElement('div');
+  t.className = 'typing'; t.id = 'typing';
+  t.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+  c.appendChild(t); c.scrollTop = c.scrollHeight;
+}
+function hideTyping() { var t = document.getElementById('typing'); if (t) t.remove(); }
+
+function showTool(label, id) {
+  var c = document.getElementById('msgs');
+  var el = document.createElement('div');
+  el.className = 'mtool'; el.id = 'tc' + id;
+  var sp = document.createElement('span'); sp.className = 'spinner'; sp.id = 'sp' + id;
+  var tx = document.createElement('span'); tx.textContent = label;
+  el.appendChild(sp); el.appendChild(tx);
+  c.appendChild(el); c.scrollTop = c.scrollHeight;
+}
+function doneTool(id) {
+  var sp = document.getElementById('sp' + id);
+  if (sp) {
+    var t = document.createElement('span'); t.className = 'tick'; t.textContent = 'v';
+    sp.parentNode.replaceChild(t, sp);
+  }
+}
+
+async function send(text) {
+  if (thinking) return;
+  var inp = document.getElementById('inp');
+  var msg = text || inp.value.trim();
+  if (!msg) return;
+  inp.value = ''; inp.style.height = 'auto';
+  thinking = true;
+  document.getElementById('askbtn').disabled = true;
+  addUserMsg(msg);
+  showTyping();
+  await new Promise(function(r) { setTimeout(r, 500); });
+  hideTyping();
+  var resp = getResponse(msg);
+  for (var i = 0; i < resp.tools.length; i++) {
+    showTool(resp.tools[i], i);
+    await new Promise(function(r) { setTimeout(r, 380); });
+    doneTool(i);
+  }
+  await new Promise(function(r) { setTimeout(r, 180); });
+  addAIMsg(resp);
+  thinking = false;
+  document.getElementById('askbtn').disabled = false;
+  document.getElementById('msgs').scrollTop = 99999;
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+  var t = e.target;
+  t.style.height = 'auto';
+  t.style.height = Math.min(t.scrollHeight, 80) + 'px';
+}
+
+var SUGGS = [
+  "What alerts do I have today?",
+  "Who can cover Jamie's sick shift?",
+  "Should I approve the Saturday holiday requests?",
+  "What is the Saturday labour forecast?",
+  "What's driving the labour overage this week?",
+  "Show me today's shifts",
+  "Which staff have right to work expiring soon?",
+  "How are sales performing today?",
+  "How many holiday days do I have left?",
+  "When is my next payslip?",
+  "Show me my shifts next week",
+  "Can I book Friday 30 May off?",
+  "What do I need to do about my right to work?",
+  "Show me my P60"
+];
+
+function toggleSuggs() {
+  var el = document.getElementById('suggs');
+  var arrow = document.getElementById('suggs-arrow');
+  var open = el.classList.contains('open');
+  el.classList.toggle('open', !open);
+  arrow.classList.toggle('open', !open);
+}
+
+function init() {
+  var c = document.getElementById('suggs');
+  SUGGS.forEach(function(s) {
+    var b = document.createElement('button');
+    b.className = 'chip'; b.textContent = s;
+    b.onclick = (function(q) { return function() { send(q); }; })(s);
+    c.appendChild(b);
+  });
+  var wrap = document.createElement('div');
+  wrap.className = 'ma';
+  var sum = document.createElement('div');
+  sum.className = 'ma-summary';
+  sum.innerHTML = 'Good afternoon, Rachel. I have access to shifts, labour, alerts, holidays, sales, payslips, and right to work records across <b>13 Fourth API tools</b>.<br><br>What would you like to know?';
+  wrap.appendChild(sum);
+  document.getElementById('msgs').appendChild(wrap);
+}
+
+init();
+</script>
+</body>
+</html>

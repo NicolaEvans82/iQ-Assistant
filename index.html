@@ -14,10 +14,10 @@
 }
 
 /* ---- PAGE ---- */
-body{font-family:'Roboto',sans-serif;background:#1a1a2e;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 24px}
+body{font-family:'Roboto',sans-serif;background:#1a1a2e;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 
 /* ---- TABLET FRAME ---- */
-.tablet-frame{width:900px;height:580px;background:#0d0d1a;border-radius:24px;padding:14px;box-shadow:0 40px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.06),inset 0 0 0 1px rgba(255,255,255,0.04);position:relative;flex-shrink:0}
+.tablet-frame{width:1180px;height:820px;transform-origin:center center;background:#0d0d1a;border-radius:24px;padding:14px;box-shadow:0 40px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.06),inset 0 0 0 1px rgba(255,255,255,0.04);position:relative;flex-shrink:0}
 .tablet-screen{width:100%;height:100%;border-radius:12px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:var(--bg)}
 
 /* ---- APP BEHIND (static Fourth Manager App) ---- */
@@ -28,7 +28,7 @@ body{font-family:'Roboto',sans-serif;background:#1a1a2e;min-height:100vh;display
 .app-date{font-size:12px;color:rgba(255,255,255,0.4);margin-left:auto}
 .app-user{width:28px;height:28px;border-radius:50%;background:var(--deep);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
 
-.app-body{flex:1;display:flex;overflow:hidden}
+.app-body{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
 
 .app-sidebar{width:56px;background:var(--navy);border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:8px;flex-shrink:0}
 .nav-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0.4;font-size:18px}
@@ -69,7 +69,7 @@ body{font-family:'Roboto',sans-serif;background:#1a1a2e;min-height:100vh;display
 .blur-overlay{position:absolute;inset:0;background:rgba(10,20,40,0.15);backdrop-filter:blur(0px);z-index:10;border-radius:12px}
 
 /* ---- iQ CHAT PANEL (overlaid) ---- */
-.iq-panel{position:absolute;right:20px;bottom:20px;width:360px;height:480px;background:#fff;z-index:20;display:flex;flex-direction:column;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.08)}
+.iq-panel{position:absolute;right:20px;bottom:16px;width:420px;height:680px;background:#fff;z-index:20;display:flex;flex-direction:column;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.08)}
 
 .iq-header{background:var(--navy);padding:12px 14px;flex-shrink:0;border-radius:14px 14px 0 0}
 .iq-header-top{display:flex;align-items:center;gap:8px}
@@ -160,64 +160,151 @@ body{font-family:'Roboto',sans-serif;background:#1a1a2e;min-height:100vh;display
 
     <!-- BACKGROUND APP -->
     <div class="app-topbar">
-      <div class="app-logo"><span>fourth</span><span class="app-logo-badge">Manager</span></div>
-      <span class="app-loc">The Crown Hotel, Birmingham</span>
-      <span class="app-date">Friday 16 May 2025</span>
-      <div class="app-user">RD</div>
+      <div style="width:36px;height:36px;background:#1a3a5c;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <div style="width:18px;height:18px;border:2.5px solid rgba(255,255,255,0.8);border-radius:3px;position:relative">
+          <div style="position:absolute;top:2px;left:2px;right:2px;bottom:2px;border:1.5px solid rgba(255,255,255,0.5);border-radius:1px"></div>
+        </div>
+      </div>
+      <div style="margin-left:4px">
+        <div style="font-size:16px;font-weight:700;color:#fff;line-height:1.2">Requiring Action Today</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5)">Friday 16 May 2025</div>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--teal)"></div>
+        <div style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:6px 14px;display:flex;align-items:center;gap:8px;font-size:13px;color:#fff">
+          <span style="font-size:12px;opacity:0.6">&#9679;</span> The Crown Hotel, Birmingham
+          <span style="opacity:0.5;font-size:11px">&#9660;</span>
+        </div>
+      </div>
     </div>
     <div class="app-body">
-      <div class="app-sidebar">
-        <div class="nav-icon active">&#9783;</div>
-        <div class="nav-icon">&#128197;</div>
-        <div class="nav-icon">&#128101;</div>
-        <div class="nav-icon">&#128202;</div>
-        <div class="nav-icon">&#9881;</div>
+      <div style="flex:1;padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px;overflow:hidden">
+
+        <!-- Left column -->
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <!-- Action card expanded -->
+          <div style="background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,0.08);overflow:hidden">
+            <div style="padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.06)">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--orange);text-transform:uppercase;margin-bottom:8px">Action Required</div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="font-size:14px;font-weight:600;color:#1a2533">Jamie Reed sick -- Kitchen Porter uncovered</div>
+                <span style="font-size:16px;color:#ccc">&#8963;</span>
+              </div>
+            </div>
+            <div style="padding:12px 16px;background:var(--tbg);border-bottom:1px solid rgba(0,182,159,0.12);display:flex;gap:8px;align-items:flex-start">
+              <span style="color:var(--teal);font-size:14px;margin-top:1px">&#10022;</span>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--teal);letter-spacing:0.04em;margin-bottom:3px">iQ REASONING</div>
+                <div style="font-size:12px;color:#445;line-height:1.5">11:00-19:00 Kitchen Porter shift is uncovered. 3 trained staff are available with no overtime cost.</div>
+              </div>
+            </div>
+            <div style="padding:10px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.06em;color:#8a96a3;margin-bottom:4px">RECOMMENDED COVER</div>
+              <div style="font-size:13px;font-weight:600;color:#1a2533">Dan Xu</div>
+              <div style="font-size:11px;color:#8a96a3">Available now . trained . no overtime cost</div>
+            </div>
+            <div style="padding:10px 16px;border-bottom:1px solid rgba(0,0,0,0.05)">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.06em;color:#8a96a3;margin-bottom:6px">ALL AVAILABLE</div>
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;justify-content:space-between;font-size:12px"><span style="font-weight:500">Dan Xu</span><span style="color:var(--teal);font-weight:600">Recommended</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px"><span style="font-weight:500">Aisha Obi</span><span style="color:#8a96a3">Available after 10:30</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:12px"><span style="font-weight:500">Connor Hall</span><span style="color:var(--orange)">Overtime +£142</span></div>
+              </div>
+            </div>
+            <div style="padding:12px 16px">
+              <div style="background:var(--navy);color:#fff;border-radius:8px;padding:11px;text-align:center;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer">
+                <span>&#10003;</span> Assign Dan Xu to shift
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <!-- Alert cards -->
+          <div style="background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,0.08);padding:14px 16px">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--orange);text-transform:uppercase;margin-bottom:8px">Action Required</div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="font-size:13px;font-weight:500;color:#1a2533">Saturday labour forecast 12% over budget</div>
+              <span style="font-size:14px;color:#ccc">&#8964;</span>
+            </div>
+          </div>
+          <div style="background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,0.08);padding:14px 16px">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--orange);text-transform:uppercase;margin-bottom:8px">Action Required</div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="font-size:13px;font-weight:500;color:#1a2533">3 holiday requests pending -- peak Saturday 24 May</div>
+              <span style="font-size:14px;color:#ccc">&#8964;</span>
+            </div>
+          </div>
+          <div style="background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,0.08);padding:14px 16px">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--orange);text-transform:uppercase;margin-bottom:8px">Compliance Alert</div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="font-size:13px;font-weight:500;color:#1a2533">Right to work documentation -- Lucia Ferreira expires in 14 days</div>
+              <span style="font-size:14px;color:#ccc">&#8964;</span>
+            </div>
+          </div>
+          <!-- Workflow deadlines -->
+          <div style="background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,0.08);overflow:hidden">
+            <div style="padding:14px 16px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:space-between">
+              <div style="font-size:14px;font-weight:700;color:#1a2533">Workflow Deadlines</div>
+              <span style="color:#ccc;font-size:14px">&#8250;</span>
+            </div>
+            <div style="padding:10px 16px;border-bottom:1px solid rgba(0,0,0,0.05);display:flex;align-items:center;gap:10px">
+              <span style="font-size:13px;font-weight:500;flex:1">Approve T&amp;A</span>
+              <span style="background:#f0f0f0;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:0.04em;color:#666">WORKFORCE</span>
+              <span style="font-size:12px;font-weight:600;color:var(--red)">Overdue</span>
+              <span style="color:#ccc;font-size:12px">&#8964;</span>
+            </div>
+            <div style="padding:10px 16px;border-bottom:1px solid rgba(0,0,0,0.05);display:flex;align-items:center;gap:10px">
+              <span style="font-size:13px;font-weight:500;flex:1">Submit schedule</span>
+              <span style="background:#f0f0f0;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:0.04em;color:#666">WORKFORCE</span>
+              <span style="font-size:12px;font-weight:600;color:var(--orange)">Due today</span>
+              <span style="color:#ccc;font-size:12px">&#8964;</span>
+            </div>
+            <div style="padding:10px 16px;border-bottom:1px solid rgba(0,0,0,0.05);display:flex;align-items:center;gap:10px">
+              <span style="font-size:13px;font-weight:500;flex:1">Stock count variance</span>
+              <span style="background:#f0f0f0;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:0.04em;color:#666">INVENTORY</span>
+              <span style="font-size:12px;font-weight:600;color:var(--orange)">Due today</span>
+              <span style="color:#ccc;font-size:12px">&#8964;</span>
+            </div>
+            <div style="padding:10px 16px;display:flex;align-items:center;gap:10px">
+              <span style="font-size:13px;font-weight:500;flex:1">Complete onboarding</span>
+              <span style="background:#f0f0f0;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:0.04em;color:#666">HR</span>
+              <span style="font-size:12px;font-weight:600;color:var(--orange)">Due today</span>
+              <span style="color:#ccc;font-size:12px">&#8964;</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="app-content">
-        <div>
-          <div class="app-section-label">Business snapshot - today</div>
-          <div class="app-metrics">
-            <div class="app-metric"><div class="app-metric-val">£18,420</div><div class="app-metric-lbl">Sales today</div><div class="app-metric-sub" style="color:var(--teal)">+4% vs last Friday</div></div>
-            <div class="app-metric"><div class="app-metric-val" style="color:var(--orange)">28.4%</div><div class="app-metric-lbl">Labour %</div><div class="app-metric-sub" style="color:var(--red)">Target 27%</div></div>
-            <div class="app-metric"><div class="app-metric-val">42/44</div><div class="app-metric-lbl">Shifts covered</div><div class="app-metric-sub" style="color:var(--red)">2 open shifts</div></div>
-            <div class="app-metric"><div class="app-metric-val" style="color:var(--orange)">3</div><div class="app-metric-lbl">Holiday requests</div><div class="app-metric-sub" style="color:#8a96a3">Pending approval</div></div>
-          </div>
+
+      <!-- Bottom nav -->
+      <div style="background:#fff;border-top:1px solid rgba(0,0,0,0.08);display:flex;align-items:center;padding:8px 0;flex-shrink:0">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border-bottom:3px solid var(--navy)">
+          <div style="width:22px;height:22px;background:var(--navy);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px">&#127968;</div>
+          <span style="font-size:10px;font-weight:700;color:var(--navy)">Today</span>
         </div>
-        <div>
-          <div class="app-section-label">iQ alerts</div>
-          <div class="app-alerts">
-            <div class="app-alert urgent"><span class="app-alert-dot" style="background:var(--red)"></span><span class="app-alert-text">Jamie Reed sick -- Kitchen Porter 11:00-19:00 uncovered</span><span class="app-alert-badge ab-red">NOW</span></div>
-            <div class="app-alert warn"><span class="app-alert-dot" style="background:var(--orange)"></span><span class="app-alert-text">Saturday labour forecast 12% over budget</span><span class="app-alert-badge ab-orange">ACTION</span></div>
-            <div class="app-alert warn"><span class="app-alert-dot" style="background:var(--orange)"></span><span class="app-alert-text">3 holiday requests pending -- peak Saturday 24 May</span><span class="app-alert-badge ab-orange">REVIEW</span></div>
-            <div class="app-alert ok"><span class="app-alert-dot" style="background:var(--teal)"></span><span class="app-alert-text">Schedule published -- w/c 19 May. All 44 shifts assigned.</span><span class="app-alert-badge ab-teal">OK</span></div>
-          </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;opacity:0.35">
+          <div style="font-size:18px;color:#8a96a3">&#9711;</div>
+          <span style="font-size:10px;color:#8a96a3">Actions</span>
         </div>
-        <div class="app-bottom">
-          <div class="app-card">
-            <div class="app-section-label">Today's shifts</div>
-            <div class="app-shifts">
-              <div class="app-shift-row"><span class="app-shift-time">07:00-15:30</span><span class="app-shift-name">Sarah Walsh</span><span class="app-mini-badge" style="background:var(--tbg);color:#007a6a">Confirmed</span></div>
-              <div class="app-shift-row"><span class="app-shift-time">08:00-16:00</span><span class="app-shift-name">Marcus Hill</span><span class="app-mini-badge" style="background:var(--tbg);color:#007a6a">Confirmed</span></div>
-              <div class="app-shift-row"><span class="app-shift-time">09:00-17:00</span><span class="app-shift-name">Priya Patel</span><span class="app-mini-badge" style="background:var(--pbg);color:var(--purple)">On Leave</span></div>
-              <div class="app-shift-row"><span class="app-shift-time">11:00-19:00</span><span class="app-shift-name">OPEN SHIFT</span><span class="app-mini-badge" style="background:var(--rbg);color:var(--red)">Uncovered</span></div>
-              <div class="app-shift-row"><span class="app-shift-time">14:00-22:00</span><span class="app-shift-name">Tom Okafor</span><span class="app-mini-badge" style="background:var(--tbg);color:#007a6a">Confirmed</span></div>
-            </div>
-          </div>
-          <div class="app-card">
-            <div class="app-section-label">Labour % this week</div>
-            <div style="display:flex;flex-direction:column;gap:5px;margin-top:6px">
-              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Mon</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:74%;height:100%;background:var(--teal);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--teal);font-weight:500">26%</span></div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Tue</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:72%;height:100%;background:var(--teal);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--teal);font-weight:500">25%</span></div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Wed</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:78%;height:100%;background:var(--teal);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--teal);font-weight:500">27%</span></div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Thu</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:80%;height:100%;background:var(--orange);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--orange);font-weight:500">28%</span></div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Fri</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:81%;height:100%;background:var(--orange);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--orange);font-weight:500">28%</span></div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:24px;color:#8a96a3">Sat</span><div style="flex:1;height:5px;background:#f0f0f0;border-radius:3px"><div style="width:89%;height:100%;background:var(--red);border-radius:3px"></div></div><span style="width:32px;text-align:right;color:var(--red);font-weight:500">31%</span></div>
-            </div>
-          </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;opacity:0.35">
+          <div style="font-size:18px;color:#8a96a3">&#9654;</div>
+          <span style="font-size:10px;color:#8a96a3">Operations</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;opacity:0.35">
+          <div style="font-size:18px;color:#8a96a3">&#9641;</div>
+          <span style="font-size:10px;color:#8a96a3">Real Time Data</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;opacity:0.35">
+          <div style="font-size:18px;color:#8a96a3">&#9783;</div>
+          <span style="font-size:10px;color:#8a96a3">Core Workflows</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;opacity:0.35">
+          <div style="font-size:18px;color:#8a96a3">&#8596;</div>
+          <span style="font-size:10px;color:#8a96a3">Connected Apps</span>
         </div>
       </div>
     </div>
-
     <!-- BLUR LAYER -->
     <div class="blur-overlay"></div>
 
@@ -577,6 +664,17 @@ function toggleSuggs() {
   el.classList.toggle('open', !open);
   arrow.classList.toggle('open', !open);
 }
+
+function scaleTablet() {
+  var frame = document.querySelector('.tablet-frame');
+  var scaleX = (window.innerWidth - 40) / 1180;
+  var scaleY = (window.innerHeight - 40) / 820;
+  var scale = Math.min(scaleX, scaleY, 1);
+  frame.style.transform = 'scale(' + scale + ')';
+  document.body.style.height = Math.round(820 * scale + 40) + 'px';
+}
+window.addEventListener('resize', scaleTablet);
+scaleTablet();
 
 function init() {
   var c = document.getElementById('suggs');
